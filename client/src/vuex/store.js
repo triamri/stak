@@ -8,11 +8,20 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     stakList: [],
-    stak: null
+    stak: null,
+    user: null,
+    isLogin: false
   },
   mutations: {
     setList (state, payload) {
       state.stakList = payload
+    },
+    setUser (state, payload) {
+      state.user = payload
+      state.isLogin = true
+    },
+    setLogin (state, payload) {
+      state.isLogin = payload
     },
     setStak (state, payload) {
       state.stak = payload
@@ -26,6 +35,39 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    submitLogin ({ commit }, payload) {
+      axios.post(`http://localhost:3000/api/users/signin`, payload)
+        .then(({ data }) => {
+          console.log(data.data)
+          localStorage.setItem('token', data.data)
+          commit('setUser', data.data)
+          router.push({
+            name: 'Home Public'
+          })
+        })
+        .catch(err => console.log(err))
+    },
+    submitRegister ({ commit }, payload) {
+      axios.post(`http://localhost:3000/api/users/signup`, payload)
+        .then(({ data }) => {
+          router.push({
+            name: 'Home Public'
+          })
+        })
+        .catch(err => console.log(err))
+    },
+    cekLogin ({ commit }, payload) {
+      if (localStorage.getItem('token')) {
+        commit('setLogin', true)
+      }
+    },
+    LogoutSistem ({ commit }, payload) {
+      localStorage.clear()
+      commit('setLogin', false)
+      router.push({
+        name: 'Home Public'
+      })
+    },
     getListAll ({ commit }, payload) {
       axios.get(`http://localhost:3000/api/questions/all`)
         .then(({ data }) => {
@@ -35,7 +77,11 @@ const store = new Vuex.Store({
         .catch(err => console.log(err))
     },
     getListAllUser ({ commit }, payload) {
-      axios.get(`http://localhost:3000/api/questions/alluser`)
+      axios.get(`http://localhost:3000/api/questions/alluser`, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
         .then(({ data }) => {
           console.log(data.data)
           commit('setList', data.data)
@@ -50,8 +96,13 @@ const store = new Vuex.Store({
         .catch(err => console.log(err))
     },
     submitQuestion ({ commit }, payload) {
-      axios.post(`http://localhost:3000/api/questions/create`, payload)
+      axios.post(`http://localhost:3000/api/questions/create`, payload, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
         .then(({ data }) => {
+          console.log(data)
           router.push({
             name: 'About'
           })
@@ -62,6 +113,10 @@ const store = new Vuex.Store({
       axios.put(`http://localhost:3000/api/questions/update/${payload.id}`, {
         question: payload.question,
         desc: payload.desc
+      }, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
       })
         .then(({ data }) => {
           router.push({
@@ -71,7 +126,11 @@ const store = new Vuex.Store({
         .catch(err => console.log(err))
     },
     removeList ({ commit }, payload) {
-      axios.delete(`http://localhost:3000/api/questions/remove/${payload._id}`)
+      axios.delete(`http://localhost:3000/api/questions/remove/${payload._id}`, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      })
         .then(({ data }) => {
           commit('removeData', payload)
         })
@@ -80,6 +139,10 @@ const store = new Vuex.Store({
     submitAnswer ({ commit }, payload) {
       axios.post(`http://localhost:3000/api/answers/create/${payload.idQuestion}`, {
         answer: payload.answer
+      }, {
+        headers: {
+          token: localStorage.getItem('token')
+        }
       })
         .then(({ data }) => {
           console.log(data.data)
@@ -90,7 +153,10 @@ const store = new Vuex.Store({
           }
           commit('setAnswer', sendData)
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+          commit('setError', payload)
+        })
     }
   }
 })

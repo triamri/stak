@@ -11,16 +11,19 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">Home</a>
+              <router-link class="nav-link" :to="{ name: 'Home Public' }">Home</router-link>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="about.html">About</a>
+            <li class="nav-item" v-if="isLogin">
+              <router-link class="nav-link" :to="{ name: 'About' }">About</router-link>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="post.html">Login</a>
+            <li class="nav-item" v-if="isLogin === false">
+              <router-link class="nav-link" :to="{ name: 'Login' }">Login</router-link>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="contact.html">Sign Up</a>
+            <li class="nav-item" v-if="isLogin === false">
+              <router-link class="nav-link" :to="{ name: 'Register' }">Sign Up</router-link>
+            </li>
+            <li class="nav-item" v-if="isLogin">
+              <a class="nav-link" @click="LogoutSistem">Log Out</a>
             </li>
           </ul>
         </div>
@@ -28,3 +31,23 @@
     </nav>
   </div>
 </template>
+<script>
+import { mapActions, mapState } from 'vuex'
+export default {
+  computed: {
+    ...mapState([
+      'isLogin'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'cekLogin',
+      'LogoutSistem'
+    ])
+  },
+  created () {
+    this.cekLogin()
+  }
+}
+</script>
+

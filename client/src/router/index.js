@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HomePublic from '@/components/public/HomePublic'
 import QuestionDetail from '@/components/public/QuestionDetail'
+import LoginUser from '@/components/login/LoginUser'
+import RegisterUser from '@/components/login/RegisterUser'
 import About from '@/components/userguide/About'
 import CreateQuestion from '@/components/userguide/CreateQuestion'
 import EditQuestion from '@/components/userguide/EditQuestion'
@@ -17,6 +19,16 @@ export default new Router({
       path: '/',
       name: 'Home Public',
       component: HomePublic
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: LoginUser
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: RegisterUser
     },
     {
       path: '/question/:id',

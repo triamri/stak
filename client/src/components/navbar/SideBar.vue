@@ -1,8 +1,8 @@
 <template>
   <div class="col-lg-3" style="float:left;">
     <div class="list-group">
-      <a href="/about" class="list-group-item">Questions</a>
-      <a href="/answers" class="list-group-item">Answers</a>
+      <router-link :to="{ name: 'About' }" class="list-group-item">Questions</router-link>
+      <router-link :to="{ name: 'Answers' }" class="list-group-item">Answers</router-link>
     </div>
   </div>
 </template>
