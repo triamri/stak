@@ -8,14 +8,14 @@ let createAnswer = (req, res) => {
     $push: {
       'answers': { 
         answer: req.body.answer,
-        userID: '5a5b154738f0ad0d074123cc' 
+        userID: req.getUser.id
       }
     }
   })
   .then((result) => {
     res.status(200).json({
       msg: 'Answer Sukses',
-      data: '5a5b154738f0ad0d074123cc'
+      data: req.getUser.id
     })
   })
   .catch(err => console.log(err))

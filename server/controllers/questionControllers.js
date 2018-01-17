@@ -7,7 +7,7 @@ let createQuestion = (req, res) => {
   let newQuestion = new Question({
     question: req.body.question,
     desc: req.body.desc,
-    userID: '5a5b154738f0ad0d074123cc',
+    userID: req.getUser.id,
     answers: [],
     votes: []
   })
@@ -29,7 +29,8 @@ let updateQuestion = (req, res) => {
     desc: req.body.desc
   }
   Question.update({
-    _id: req.params.id
+    _id: req.params.id,
+    userID: req.getUser.id
   }, questionUpdate)
   .then((result) => {
     res.status(200).json({
@@ -43,7 +44,8 @@ let updateQuestion = (req, res) => {
 //delete
 let removeQuestion = (req, res) => {
   Question.remove({
-    _id: req.params.id
+    _id: req.params.id,
+    userID: req.getUser.id
   })
   .then((result) => {
     res.status(200).json({
@@ -86,7 +88,7 @@ let detailQuestion = (req, res) => {
 //all question user
 let allQuestionsUser = (req, res) => {
   Question.find({
-    userID: '5a5ad75ec732a9211cb404f4'
+    userID: req.getUser.id
   })
   .populate('userID')
   .then((results) => {
@@ -114,7 +116,6 @@ let detailQuestionUser = (req, res) => {
 }
 
 let voteAnswer = (req, res) => {
-  console.log('masuk');
   Question.findByIdAndUpdate(req.params.id,{
     $push: {
       'votes': {

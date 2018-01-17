@@ -5,12 +5,12 @@ const auth = require('../middleware/auth');
 
 router.get('/all', question.allQuestions);
 router.get('/detail/:id', question.detailQuestion);
-router.get('/alluser', question.allQuestionsUser);
-router.get('/detailuser', question.detailQuestionUser);
-router.post('/create', question.createQuestion);
-router.put('/update/:id', question.updateQuestion);
-router.delete('/remove/:id', question.removeQuestion);
-router.get('/vote/:id', question.voteAnswer);
+router.get('/alluser', auth.isLogin, question.allQuestionsUser);
+router.get('/detailuser', auth.isLogin, question.detailQuestionUser);
+router.post('/create', auth.isLogin, question.createQuestion);
+router.put('/update/:id', auth.isLogin, question.updateQuestion);
+router.delete('/remove/:id', auth.isLogin, question.removeQuestion);
+router.get('/vote/:id', auth.isLogin, question.voteAnswer);
 
 
 module.exports = router;
